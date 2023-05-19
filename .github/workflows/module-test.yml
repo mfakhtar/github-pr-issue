@@ -1,0 +1,68 @@
+name: Terraform Module Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-modue:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test/github
+    env:
+      TF_CLOUD_HOSTNAME: ${{vars.TF_CLOUD_HOSTNAME}}
+      TF_CLOUD_ORGANIZATION: ${{vars.TF_CLOUD_ORGANIZATION}}
+      TF_WORKSPACE: ${{vars.TF_WORKSPACE}}
+      TF_VAR_token: ${{vars.TFE_TOKEN}}
+      TF_TOKEN_app_terraform_io: "OPeQEUHt8kSLtQ.atlasv1.zQC78LxKf4y0hdSxZvL59OXtv6vjX2RTgx3PC8xuRWgyMt2apPx1HwLep4E4d6AHdGM"
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+        # The following is only required for testing new changes in the branch
+        # CLI workflow cannot upload the module files that are in upper directory
+      - name: Set up local module
+        run: |
+          mkdir -p modules/pet
+          cp ../../*.tf modules/pet
+          cp -R ../../templates modules/pet/
+          cat << EOF > backend.tf
+          terraform {
+          cloud {
+          token = "LVoSf6pnp9xfuA.atlasv1.nfQ3El84Lo6zdoo7y9AhJBOZfCHyztyrMYEyn5PNibw1b2nl3Plbme0KeAoJDt9CYkg"
+          }
+          }
+          EOF
+
+          ls -lh
+      
+      - name: Terraform Version
+        run: terraform -v
+
+      - name: Initialize Terraform
+        run: terraform init
+      
+      - name: Validate Terraform
+        run: terraform validate
+
+      - name: Plan changes
+        run: terraform plan
+      
+      - name: Apply changes
+        run: terraform apply -auto-approve
+      
+      - name: Run additional tests
+        run: |
+          terraform state list
+        continue-on-error: true
+
+      - name: Destroy
+        run: terraform destroy -auto-approve

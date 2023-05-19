@@ -30,26 +30,22 @@ jobs:
       - name : Terraform Format
         id: fmt   
         run: |
-          cd application/${{ matrix.path }}
           terraform fmt -recursive -check
 
       - name: Terraform Init
         id: init
         run: |
-          cd application/${{ matrix.path }}
           terraform init -input=false
 
       - name: Terraform Validate  
         id: validate
         run: |
-          cd application/${{ matrix.path }}
           terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
         continue-on-error: true
         run: |
-          cd application/${{ matrix.path }}
           terraform plan -no-color -input=false
 
       - name: Reformat Plan

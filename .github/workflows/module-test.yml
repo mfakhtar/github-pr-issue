@@ -114,7 +114,7 @@ jobs:
 
       - name: Post Terraform Apply to GitHub PR
         if: steps.plan.outcome == 'success' && steps.apply.outcome == 'success'
-        uses: BAN351549/add-pr-comment@v2
+        uses: mfakhtar/add-pr-comment@v2
         with:
           allow-repeats: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -133,7 +133,7 @@ jobs:
 
       - name: Post Plan Failure
         if: steps.plan.outcome == 'failure'
-        uses: BAN351549/add-pr-comment@v2
+        uses: mfakhtar/add-pr-comment@v2
         with:
           allow-repeats: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -150,7 +150,7 @@ jobs:
 
       - name: Post Apply Failure
         if: steps.apply.outcome == 'failure'
-        uses: BAN351549/add-pr-comment@v2
+        uses: mfakhtar/add-pr-comment@v2
         with:
           allow-repeats: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}

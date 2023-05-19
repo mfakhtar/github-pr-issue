@@ -61,7 +61,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Post Plan to GitHub PR
-        uses: BAN351549/add-pr-comment@v2
+        uses: mfakhtar/add-pr-comment@v2
         env:
           PLAN_OP: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
@@ -96,7 +96,7 @@ jobs:
 
       - name: Inform on PR that Apply is Running
         if: github.ref == 'refs/heads/master' && github.event_name == 'push' && steps.plan.outcome == 'success'
-        uses: BAN351549/add-pr-comment@v2
+        uses: mfakhtar/add-pr-comment@v2
         with:
           allow-repeats: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
